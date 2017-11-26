@@ -69,7 +69,7 @@ def getAllInstalledPythonPackage(*args):
 
     pkgInfo = os.path.join(os.getenv('PROGRAMDATA'), 'PipelineTool/scrInfo/apps.pipeline')
 
-    print pkgInfo, os.path.exists(pkgInfo)
+    # print pkgInfo, os.path.exists(pkgInfo)
 
     if not os.path.exists(pkgInfo):
         from tk import getData

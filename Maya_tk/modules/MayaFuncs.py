@@ -1,17 +1,29 @@
 # -*-coding:utf-8 -*
-
 """
 
+Script Name: MayaFuncs.py
+Author: Do Trinh/Jimmy - TD artist
+
+Description:
+    This file will contain every common functions/procedural that will be used inside Maya
 
 """
-
-from maya import cmds, mel
-import maya.OpenMaya as om
+# -------------------------------------------------------------------------------------------------------------
+# IMPORT MAYA PYTHON MODULES
+# -------------------------------------------------------------------------------------------------------------
+import logging
+import os
+import subprocess
 from functools import partial
 
-import os, sys, logging, shutil, subprocess
+import maya.OpenMaya as om
+from maya import cmds, mel
 
 from Maya_tk.modules import MayaVariables as var
+
+# ------------------------------------------------------
+# VARIALBES ARE USED BY ALL CLASSES
+# ------------------------------------------------------
 NAMES = var.MAINVAR
 SCRPTH = os.path.join(os.getenv('PROGRAMDATA'), 'PipelineTool/scrInfo')
 ICONS = var.ICONS
@@ -29,23 +41,30 @@ logging.basicConfig()
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.DEBUG)
 
-# -------------------------------------------------------------------------------------------------------------
-# CHECK THE CORRECT BINDING THAT BE USING UNDER QT.PY
-# -------------------------------------------------------------------------------------------------------------
-# While Qt.py lets us abstract the actual Qt library, there are a few things it cannot do yet
-# and a few support libraries we need that we have to import manually.
-# if Qt.__binding__=='PySide':
-#     logger.debug('Using PySide with shiboken')
-#     from shiboken import wrapInstance
-#     from Maya_tk.plugins.Qt.QtCore import Signal
-# elif Qt.__binding__.startswith('PyQt'):
-#     logger.debug('Using PyQt with sip')
-#     from sip import wrapinstance as wrapInstance
-#     from Maya_tk.plugins.Qt.QtCore import pyqtSignal as Signal
-# else:
-#     logger.debug('Using PySide2 with shiboken2')
-#     from shiboken2 import wrapInstance
-#     from Maya_tk.plugins.Qt.QtCore import Signal
+def wingCreator(*args):
+    from Maya_tk.modules import WingCreator
+    reload(WingCreator)
+    WingCreator.wingCreator()
+
+def aligner(*args):
+    from Maya_tk.modules.modeling import Aligner
+    reload(Aligner)
+    Aligner.initialize()
+
+def randomizer(*args):
+    from Maya_tk.modules.modeling import Randomizer
+    reload(Randomizer)
+    Randomizer.initialize()
+
+def userLib(*args):
+    from Maya_tk.modules import UserLibrary
+    reload(UserLibrary)
+    UserLibrary.initialize()
+
+def tweenerUI(*args):
+    from Maya_tk.modules.Animation import Tweener
+    reload(Tweener)
+    Tweener.initialize()
 
 def fixTexturePathUI(*args):
     from Maya_tk.modules import FixPath
@@ -286,9 +305,9 @@ def newProd(*args):
     ProdFolder.ProdFolder()
 
 def lightManager(*args):
-    from Maya_tk.modules import toolBoxIII
-    reload( toolBoxIII )
-    toolBoxIII.showUI()
+    from Maya_tk.modules import ToolBoxIII
+    reload(ToolBoxIII)
+    ToolBoxIII.showUI()
 
 def channelBoxUI(*args):
     from Maya_tk.modules import ChannelBox
@@ -296,9 +315,9 @@ def channelBoxUI(*args):
     ChannelBox.ChannelBox()
 
 def toolBoxI(*args):
-    from Maya_tk.modules import toolBoxI
-    reload( toolBoxI )
-    toolBoxI.DAMGtoolBoxI()
+    from Maya_tk.modules import ToolBoxI
+    reload(ToolBoxI)
+    ToolBoxI.DAMGtoolBoxI()
 
 def createGear(*args):
     from Maya_tk.modules.modeling import gearCreator
@@ -306,19 +325,19 @@ def createGear(*args):
     gearCreator.gear()
 
 def toolBoxII(*args):
-    from Maya_tk.modules import toolBoxII
-    reload( toolBoxII )
-    toolBoxII.DAMGtoolBoxII()
+    from Maya_tk.modules import ToolBoxII
+    reload(ToolBoxII)
+    ToolBoxII.ToolBoxII()
 
 def toolBoxIII(*args):
-    from Maya_tk.modules import toolBoxIII
-    reload( toolBoxIII )
-    toolBoxIII.toolBoxIII()
+    from Maya_tk.modules import ToolBoxIII
+    reload(ToolBoxIII)
+    ToolBoxIII.toolBoxIII()
 
 def toolBoxIV(*args):
-    from Maya_tk.modules import toolBoxIV
-    reload( toolBoxIV )
-    toolBoxIV.toolBoxIV()
+    from Maya_tk.modules import ToolBoxIV
+    reload(ToolBoxIV)
+    ToolBoxIV.toolBoxIV()
 
 def publishUI(mode, *args):
     if mode=='Studio Mode':
@@ -672,3 +691,7 @@ def styleColumn212(ann, label, cmd, adj, w, *args):
     cmds.setParent(style212Layout)
     cmds.setParent('..')
     return style212Layout
+
+# -------------------------------------------------------------------------------------------------------------
+# END OF CODE
+# -------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,11 @@
 # -*-coding:utf-8 -*
-
 """
+
+Script Name: MayaMainUI.py
+Author: Do Trinh/Jimmy - TD artist
+
+Description:
+    It will create a dock UI for entire my work in Maya.
 
 """
 # -------------------------------------------------------------------------------------------------------------
@@ -209,7 +214,7 @@ class MayaMainUI( QtWidgets.QWidget ):
         if self.sequencesList == [ ]:
             self.sequencesTaskPth = self.sequencesPth + 'shot_01/'
             cmds.sysFile( self.sequencesTaskPth, md=True )
-            self.sequencesTaskList = [ 'lighting', 'FX', 'layout', 'animation', 'comp' ]
+            self.sequencesTaskList = [ 'lighting', 'FX', 'layout', 'Animation', 'comp' ]
             for i in self.sequencesTaskList:
                 cmds.sysFile( self.sequencesTaskPth + i, md=True )
         else:
@@ -387,7 +392,7 @@ class MayaMainUI( QtWidgets.QWidget ):
         cmds.setParent( mlor_lo1 )
 
         t2 = cmds.columnLayout( parent=self.tabControls, w=w2 )
-        self.modelingTab()
+        modelingTabLayout = self.modelingTab()
         cmds.setParent( self.tabControls )
 
         t3 = cmds.columnLayout(parent=self.tabControls )
@@ -395,7 +400,7 @@ class MayaMainUI( QtWidgets.QWidget ):
         cmds.setParent( self.tabControls )
 
         t4 = cmds.columnLayout( parent=self.tabControls )
-        self.surfacingTab()
+        sufacingTabLayout = self.surfacingTab()
         cmds.setParent( self.tabControls )
 
         t5 = cmds.columnLayout(parent=self.tabControls )
@@ -403,7 +408,7 @@ class MayaMainUI( QtWidgets.QWidget ):
         cmds.setParent( self.tabControls )
 
         t6 = cmds.columnLayout(parent=self.tabControls )
-        self.bts.makeAcoolButton("Demo buttons",  'Animation', self.bts.waitforupdate )
+        animationTabLayout = self.animationTab()
         cmds.setParent( self.tabControls )
 
         t7 = cmds.columnLayout(parent=self.tabControls )
@@ -413,11 +418,38 @@ class MayaMainUI( QtWidgets.QWidget ):
         cmds.tabLayout( self.tabControls, edit=True, tabLabel=(
             (t1, "Project"), (t2, "Model"), (t3, "Rig"), (t4, "Surface"), (t5, "FX"), (t6, "Anim"), (t7, "Light")) )
 
+    def animationTab(self):
+        animationTabLayout = cmds.columnLayout()
+
+        self.bts.makeAcoolButton("Animation Tweener", 'Tweener', self.bts.tweenerUI)
+
+        cmds.setParent(animationTabLayout)
+
+        return animationTabLayout
+
     def modelingTab(self):
+        w = WIDTH - ICONWIDTH
+
+        modelingTabLayout = cmds.columnLayout()
+
+        cmds.rowColumnLayout(nc=5, cw=[(1,80),(2,80),(3,80),(4,80),(4,80),])
         self.bts.makeAcoolButton("Create gear sets", 'Create Gear', self.bts.createGear)
+        self.bts.makeAcoolButton("Objects Randomizer", 'Randomizer', self.bts.randomizer)
+        self.bts.makeAcoolButton('Objects Aligner', 'Aligner', self.bts.aligner)
+        self.bts.makeAcoolButton('Create Wing', 'Create Wing', self.bts.wingCreator)
+
+        cmds.setParent(modelingTabLayout)
+
+        return modelingTabLayout
 
     def surfacingTab(self):
+        sufacingTabLayout = cmds.columnLayout()
+
         self.bts.makeAcoolButton("Vray Material Presets", "Vray Presets", self.bts.vmmApps)
+
+        cmds.setParent(sufacingTabLayout)
+
+        return sufacingTabLayout
 
     def menuSection(self, parent, *args):
         # file
@@ -549,7 +581,7 @@ class MayaMainUI( QtWidgets.QWidget ):
 
         ann3 = [ 'Tool Box I', 'Tool Box II', 'Tool Box III', 'Tool Box IV', 'Clock and Reminder' ]
         ic3 = ['toolboxI.icon.png', 'toolboxII.icon.png', 'toolboxIII.icon.png', 'toolboxIV.icon.png', 'clock.icon.png']
-        cm3 = [self.bts.toolBoxI,self.bts.toolBoxII,self.bts.toolBoxIII,self.bts.toolBoxIV, self.bts.waitforupdate]
+        cm3 = [self.bts.toolBoxI,self.bts.toolBoxII,self.bts.toolBoxIII,self.bts.toolBoxIV, self.bts.userLib]
 
         ids = [ 'gcb', 'ccb', 'jcb', 'ncb', 'lcb' ]
         anns = ['Mesh', 'Camera', 'Joint', 'Curves', 'Light']
@@ -989,4 +1021,6 @@ class MayaMainUI( QtWidgets.QWidget ):
 if __name__=="__main__":
     MayaMainUI()
 
-#End of Main UI
+# -------------------------------------------------------------------------------------------------------------
+# END OF CODE
+# -------------------------------------------------------------------------------------------------------------
