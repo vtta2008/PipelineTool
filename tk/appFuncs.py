@@ -34,30 +34,24 @@ def createToken(*args):
     token = uuid.uuid4()
     return token
 
+
 def dataHandle(filePath, mode, indent=4, *args):
     """
-    json functions: read, write, edit... etc
+    json functions: read, write, append
     """
 
-    # print filePath
+    logger.info('json handler({}) - {}'.format(mode, filePath))
 
-    if mode=='r' or mode=='r+':
-        if not os.path.exists(filePath):
-            logger.debug('file is not exists')
-            sys.exit()
-        else:
-            with open(filePath, mode) as f:
-                return json.load(f)
-    elif mode == 'a' or mode == 'a+':
-        if not os.path.exists(filePath):
-            logger.debug('file is not exists')
-            sys.exit()
-        else:
-            with open(filePath, mode) as f:
-                return json.dump(filePath, f, indent=indent)
-    elif mode == 'w' or mode =='w+':
+    try:
         with open(filePath, mode) as f:
-            return json.dump(filePath, f, indent=indent)
+            if 'r' in mode:
+                return json.load(f)
+            else:
+                return json.dump(filePath, f, indent=indent)
+    except IOError:
+        logger.debug('Passed in file does not exist: {}'.format(filePath))
+        sys.exit(1)
+
 
 def getAllInstalledPythonPackage(*args):
     pyPkgs = {}
@@ -143,24 +137,24 @@ def createKey(key, path, *args):
 
     os.environ[key] = path
 
+
 # Check the value of environment variable
 def checkEnvKey(key, path, *args):
-    try:
-        pth = os.getenv(key)
+    """
+    Ensure the environment key:
+        1. exists
+        2. Is set to something other than None or ''
+    """
+    value = os.environ.get(key, None)
+    if value in (None, ''):
+        os.environ[key] = path
 
-        if pth == None or pth == '':
-            createKey(key, path)
-
-    except KeyError:
-        createKey(key, path)
-    else:
-        pass
 
 # Get the full path of icon via icon file name
 def getIcon(name, *args):
     iconName = name + '.icon.png'
     rootPth = os.getcwd().split('ui')[0]
-    iconPth = os.path.join(os.path.join(rootPth, 'icons'), iconName)
+    iconPth = os.path.join(rootPth, 'icons', iconName)
     return iconPth
 
 # Get the full path of image via icon file name
@@ -172,7 +166,7 @@ def avatar(userName, *args):
 
 # Save information of current log in user account for next time.
 def saveCurrentUserLogin(userName, remember=False, *args):
-    userDataPth = os.path.join(os.getenv('PROGRAMDATA'), 'PipelineTool/scrInfo/user.info')
+    userDataPth = os.path.join(os.getenv('PROGRAMDATA'), 'PipelineTool', 'scrInfo','user.info')
 
     with open(userDataPth, 'r') as f:
         userData = json.load(f)
@@ -181,7 +175,7 @@ def saveCurrentUserLogin(userName, remember=False, *args):
 
     curUser = {}
     curUser[userName] = userData[userName]
-    currentUserLoginPth = os.path.join(os.getenv('PROGRAMDATA'), 'PipelineTool/user.tempLog')
+    currentUserLoginPth = os.path.join(os.getenv('PROGRAMDATA'), 'PipelineTool', 'user.tempLog')
     with open(currentUserLoginPth, 'w') as f:
         json.dump(curUser, f, indent=4)
 
